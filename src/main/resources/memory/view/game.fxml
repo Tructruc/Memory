@@ -28,6 +28,13 @@
                         <MenuItem mnemonicParsing="false" onAction="#onSize" text="20x20" />
                     </items>
                   </Menu>
+                  <Menu mnemonicParsing="false" text="Mode de tracé">
+                     <items>
+                        <RadioMenuItem mnemonicParsing="false" onAction="#onModeTrace" selected="true" text="Horizontal" />
+                        <RadioMenuItem mnemonicParsing="false" onAction="#onModeTrace" text="Vertical" />
+                        <RadioMenuItem mnemonicParsing="false" onAction="#onModeTrace" text="Spirale" />
+                     </items>
+                  </Menu>
                   <SeparatorMenuItem mnemonicParsing="false" />
                   <RadioMenuItem mnemonicParsing="false" onAction="#onTricheActive" text="Mode triche" />
                   <SeparatorMenuItem mnemonicParsing="false" />
@@ -39,7 +46,7 @@
               <MenuItem mnemonicParsing="false" text="À propos" />
             </items>
           </Menu>
-            <Menu fx:id="score" disable="true" mnemonicParsing="false" text="Score" />
+            <Menu fx:id="score" mnemonicParsing="false" text="Score" />
         </menus>
       </MenuBar>
    </top>

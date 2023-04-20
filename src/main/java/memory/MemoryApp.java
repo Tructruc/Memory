@@ -26,6 +26,7 @@ public class MemoryApp extends Application {
 			primaryStage.setTitle("Memory");
 			primaryStage.setScene(scene);
 			primaryStage.setResizable(false);
+			primaryStage.setOnCloseRequest(ctrl::onQuitter);
 
 			primaryStage.show();
 		} catch(IOException e){

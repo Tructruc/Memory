@@ -3,13 +3,12 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.RadioMenuItem?>
 <?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.RowConstraints?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="memory.view.gameController">
+<BorderPane fx:id="gamePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="memory.view.gameController">
    <top>
       <MenuBar BorderPane.alignment="CENTER">
         <menus>
@@ -17,11 +16,22 @@
                <items>
                   <Menu mnemonicParsing="false" text="Taille du plateau">
                     <items>
-                      <MenuItem mnemonicParsing="false" text="4x4" />
+                      <MenuItem mnemonicParsing="false" onAction="#onSize" text="2x2" />
+                        <MenuItem mnemonicParsing="false" onAction="#onSize" text="4x4" />
+                        <MenuItem mnemonicParsing="false" onAction="#onSize" text="6x6" />
+                        <MenuItem mnemonicParsing="false" onAction="#onSize" text="8x8" />
+                        <MenuItem mnemonicParsing="false" onAction="#onSize" text="10x10" />
+                        <MenuItem mnemonicParsing="false" onAction="#onSize" text="12x12" />
+                        <MenuItem mnemonicParsing="false" onAction="#onSize" text="14x14" />
+                        <MenuItem mnemonicParsing="false" onAction="#onSize" text="16x16" />
+                        <MenuItem mnemonicParsing="false" onAction="#onSize" text="18x18" />
+                        <MenuItem mnemonicParsing="false" onAction="#onSize" text="20x20" />
                     </items>
                   </Menu>
                   <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem mnemonicParsing="false" text="Quitter" />
+                  <RadioMenuItem mnemonicParsing="false" onAction="#onTricheActive" text="Mode triche" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem mnemonicParsing="false" onAction="#onQuitter" text="Quitter" />
                </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Aide">
@@ -29,6 +39,7 @@
               <MenuItem mnemonicParsing="false" text="À propos" />
             </items>
           </Menu>
+            <Menu fx:id="score" disable="true" mnemonicParsing="false" text="Score" />
         </menus>
       </MenuBar>
    </top>

@@ -5,6 +5,7 @@
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.RadioMenuItem?>
 <?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.GridPane?>
 
@@ -30,9 +31,23 @@
                   </Menu>
                   <Menu mnemonicParsing="false" text="Mode de tracé">
                      <items>
-                        <RadioMenuItem mnemonicParsing="false" onAction="#onModeTrace" selected="true" text="Horizontal" />
-                        <RadioMenuItem mnemonicParsing="false" onAction="#onModeTrace" text="Vertical" />
-                        <RadioMenuItem mnemonicParsing="false" onAction="#onModeTrace" text="Spirale" />
+                        <RadioMenuItem mnemonicParsing="false" onAction="#onModeTrace" selected="true" text="Horizontal">
+                           <toggleGroup>
+                              <ToggleGroup fx:id="modeTrace" />
+                           </toggleGroup></RadioMenuItem>
+                        <RadioMenuItem mnemonicParsing="false" onAction="#onModeTrace" text="Vertical" toggleGroup="$modeTrace" />
+                        <RadioMenuItem mnemonicParsing="false" onAction="#onModeTrace" text="Spirale" toggleGroup="$modeTrace" />
+                     </items>
+                  </Menu>
+                  <Menu mnemonicParsing="false" text="Type cartes">
+                     <items>
+                        <RadioMenuItem mnemonicParsing="false" onAction="#onModeJeu" selected="true" text="Chiffres">
+                           <toggleGroup>
+                              <ToggleGroup fx:id="modeTrace1" />
+                           </toggleGroup>
+                        </RadioMenuItem>
+                        <RadioMenuItem mnemonicParsing="false" onAction="#onModeJeu" text="Lettres" toggleGroup="$modeTrace1" />
+                        <RadioMenuItem mnemonicParsing="false" onAction="#onModeJeu" text="Minecraft" toggleGroup="$modeTrace1" />
                      </items>
                   </Menu>
                   <SeparatorMenuItem mnemonicParsing="false" />

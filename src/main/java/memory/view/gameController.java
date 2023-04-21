@@ -1,21 +1,23 @@
 package memory.view;
 
 import javafx.application.Platform;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
-import javafx.util.converter.NumberStringConverter;
 import memory.ModeJeu;
 import memory.ModeTrace;
+import memory.Player;
+import memory.PlayerCount;
 import memory.om.Jeu;
 import memory.om.Reponse;
 
@@ -30,6 +32,10 @@ public class gameController implements Initializable {
     public BorderPane gamePane;
     @FXML
     public Menu score;
+    @FXML
+    public MenuItem Tour;
+
+    private Player suivant = Player.J1;
 
     private final int windowSize = 800;
     private boolean triche = false;
@@ -37,9 +43,11 @@ public class gameController implements Initializable {
     private ModeTrace modeTrace = ModeTrace.HORIZONTAL;
     private ArrayList<Label> labels = new ArrayList<>();
     private int firstClickIndex = 0;
-    private final IntegerProperty nbCoups = new SimpleIntegerProperty(0);
+    private final StringProperty nbCoups = new SimpleStringProperty("0");
     private ModeJeu modeJeu = ModeJeu.CHIFFRES;
     private final double gap = 10;
+    private PlayerCount nbJoueurs = PlayerCount.ONE;
+    private final StringProperty nbCoupsJ2 = new SimpleStringProperty("0");
 
     private void disableLabel(Label label) {
         label.setDisable(true);
@@ -73,6 +81,18 @@ public class gameController implements Initializable {
             case "Chiffres" -> modeJeu = ModeJeu.CHIFFRES;
             case "Lettres" -> modeJeu = ModeJeu.LETTRES;
             case "Minecraft" -> modeJeu = ModeJeu.MINECRAFT;
+            case "Smileys" -> modeJeu = ModeJeu.SMILEYS;
+        }
+        onRestart();
+    }
+
+    @FXML
+    public void onPlayerCount(Event event){
+        String name = ((MenuItem)event.getSource()).getText();
+
+        switch (name) {
+            case "1 joueur" -> nbJoueurs = PlayerCount.ONE;
+            case "2 joueurs" -> nbJoueurs = PlayerCount.TWO;
         }
         onRestart();
     }
@@ -128,7 +148,8 @@ public class gameController implements Initializable {
 
         if (reponse != Reponse.ERREUR){
             if (reponse != Reponse.PREMIERE) {
-                nbCoups.set(nbCoups.get() + 1);
+                if (nbJoueurs == PlayerCount.ONE)nbCoups.set(String.valueOf(Integer.parseInt(nbCoups.get())+ 1));
+
                 if (reponse == Reponse.PERDU) {
 
 
@@ -180,9 +201,24 @@ public class gameController implements Initializable {
                 } else if (reponse == Reponse.GAGNE) {
                     disableLabel(label);
                     disableLabel(labels.get(firstClickIndex));
-                    label.getGraphic().setVisible(true);
-                }
+                    if (modeJeu == ModeJeu.MINECRAFT || modeJeu == ModeJeu.SMILEYS)label.getGraphic().setVisible(true);
 
+                    if (nbJoueurs == PlayerCount.TWO){
+                        if (suivant == Player.J1) {
+                            nbCoups.set(String.valueOf(Integer.parseInt(nbCoups.get()) + 1));
+                        } else {
+                            nbCoupsJ2.set(String.valueOf(Integer.parseInt(nbCoupsJ2.get()) + 1));
+                        }
+                    }
+                }
+                if (nbJoueurs == PlayerCount.TWO){
+                    if (suivant == Player.J1) {
+                        suivant = Player.J2;
+                    } else {
+                        suivant = Player.J1;
+                    }
+                    setTourTexte();
+                }
             } else {
                 firstClickIndex = Integer.parseInt(label.getId());
 
@@ -194,12 +230,39 @@ public class gameController implements Initializable {
             }
 
             if (jeu.isPartieTerminee()) {
-                System.out.println("Partie terminée");
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Gagné");
-                alert.setHeaderText("Vous avez gagné");
-                alert.setContentText("Vous avez gagné en " + nbCoups.get() + " coups");
-                alert.showAndWait();
+                if (nbJoueurs == PlayerCount.ONE){
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Gagné");
+                    alert.setHeaderText("Vous avez gagné");
+                    alert.setContentText("Vous avez gagné en " + nbCoups.get() + " coups");
+                    alert.showAndWait();
+
+
+                }else {
+                    String text;
+                    if (Integer.parseInt(nbCoups.get()) > Integer.parseInt(nbCoupsJ2.get())){
+                        text = "Le Joueur 1 à gagné " + nbCoups.get() + " à " + nbCoupsJ2.get();
+                    } else if (Integer.parseInt(nbCoups.get()) < Integer.parseInt(nbCoupsJ2.get())){
+                        text = "Le Joueur 2 à gagné " + nbCoupsJ2.get() + " à " + nbCoups.get();
+                    } else {
+                        text = "Égalité " + nbCoups.get() + " à " + nbCoupsJ2.get();
+                    }
+
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Partie finie");
+                    alert.setHeaderText("La partie est terminée");
+                    alert.setContentText(text);
+                    alert.showAndWait();
+                }
+
+                Alert alert2 = new Alert(Alert.AlertType.CONFIRMATION);
+                alert2.setTitle("Recommencer");
+                alert2.setHeaderText("Voulez-vous recommencer une partie ?");
+
+                Optional<ButtonType> result = alert2.showAndWait();
+                if (result.get() == ButtonType.OK) {
+                    onStartGame();
+                }
             }
 
             if (jeu.isCarteTrouvee(Integer.parseInt(label.getId()))) {
@@ -271,7 +334,16 @@ public class gameController implements Initializable {
                 double imageSize = getLabelSize();
                 System.out.println(imageSize);
                 if (imageSize > 100) imageSize = 100;
-                Image image = new Image(getClass().getResourceAsStream("images/" + jeu.getCarteValeur(getNumLablel(x, y)) + ".png"), imageSize, imageSize, true, true);
+                Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/minecraft/" + jeu.getCarteValeur(getNumLablel(x, y)) + ".png")), imageSize, imageSize, true, true);
+                ImageView imageView = new ImageView(image);
+                label.setGraphic(imageView);
+                label.getGraphic().setVisible(false);
+            }
+            case SMILEYS -> {
+                double imageSize = getLabelSize();
+                System.out.println(imageSize);
+                if (imageSize > 100) imageSize = 100;
+                Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/smiley/" + jeu.getCarteValeur(getNumLablel(x, y)) + ".png")), imageSize, imageSize, true, true);
                 ImageView imageView = new ImageView(image);
                 label.setGraphic(imageView);
                 label.getGraphic().setVisible(false);
@@ -279,9 +351,39 @@ public class gameController implements Initializable {
         }
     }
 
+    private void setTourTexte(){
+        if (suivant == Player.J1) {
+            Tour.setText("Tour : Joueur 1");
+        }else {
+            Tour.setText("Tour : Joueur 2");
+        }
+    }
+
+    @FXML
+    public void onAbout(){
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("À propos");
+        alert.setHeaderText("À propos");
+        alert.setContentText("Ce jeu à été réalisé par Émilien FIEU lors de la semaine IHM de l’IUT de Blagnac du 17 au 23 avril. Ce jeu est basé sur un code réalisé par Fabrice PELLAU. \nVous pouvez me contacter  sur discord Tructruc#9808");
+        alert.showAndWait();
+    }
+
     public void onStartGame() {
-        score.textProperty().bindBidirectional(nbCoups, new NumberStringConverter());
-        nbCoups.set(0);
+        score.textProperty().unbind();
+        nbCoups.set("0");
+        nbCoupsJ2.set("0");
+
+        if (nbJoueurs == PlayerCount.ONE) {
+            score.textProperty().bind(Bindings.concat("Nombre de coups joués : ", nbCoups));
+            Tour.setVisible(false);
+        }
+        else {
+            score.textProperty().bind(Bindings.concat("Joueur 1 : ", nbCoups, " - Joueur 2 : ", nbCoupsJ2));
+            setTourTexte();
+        }
+
+
+
         gameGrid = new GridPane();
         labels.clear();
         gamePane.setCenter(gameGrid);
@@ -340,19 +442,23 @@ public class gameController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         score.setStyle("-fx-text-fill: ffffff");
         score.setText("");
-        Slider slider = new Slider(2, 10, 4);
-        slider.setShowTickLabels(true);
-        slider.setShowTickMarks(true);
-        slider.setMajorTickUnit(1);
+
+        Tour.setVisible(false);
 
         Button startBtn = new Button("Start");
+        startBtn.setPrefSize(200,100);
         startBtn.setOnAction(e->onStartGame());
+        startBtn.setStyle("-fx-font-size: 30px");
 
-        AnchorPane menuPane = new AnchorPane();
+        Label titleLabel = new Label("Memory the Game");
+        titleLabel.setStyle("-fx-font-size: 50px; -fx-font-weight: bold;");
 
-        menuPane.getChildren().add(startBtn);
-        AnchorPane.setTopAnchor(startBtn, 0.0);
-        AnchorPane.setLeftAnchor(startBtn, 0.0);
+
+        BorderPane menuPane = new BorderPane();
+
+        menuPane.setCenter(startBtn);
+        menuPane.setTop(titleLabel);
+        BorderPane.setAlignment(titleLabel, Pos.CENTER);
 
         menuPane.setMinSize(windowSize, windowSize);
         menuPane.setMaxSize(windowSize,windowSize);

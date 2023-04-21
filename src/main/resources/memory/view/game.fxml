@@ -15,6 +15,7 @@
         <menus>
           <Menu mnemonicParsing="false" text="Options">
                <items>
+                  <MenuItem mnemonicParsing="false" onAction="#onRestart" text="Redémarer la partie" />
                   <Menu mnemonicParsing="false" text="Taille du plateau">
                     <items>
                       <MenuItem mnemonicParsing="false" onAction="#onSize" text="2x2" />
@@ -29,6 +30,30 @@
                         <MenuItem mnemonicParsing="false" onAction="#onSize" text="20x20" />
                     </items>
                   </Menu>
+                  <Menu mnemonicParsing="false" text="Type cartes">
+                     <items>
+                        <RadioMenuItem mnemonicParsing="false" onAction="#onModeJeu" selected="true" text="Chiffres">
+                           <toggleGroup>
+                              <ToggleGroup fx:id="modeTrace1" />
+                           </toggleGroup>
+                        </RadioMenuItem>
+                        <RadioMenuItem mnemonicParsing="false" onAction="#onModeJeu" text="Lettres" toggleGroup="$modeTrace1" />
+                        <RadioMenuItem mnemonicParsing="false" onAction="#onModeJeu" text="Minecraft" toggleGroup="$modeTrace1" />
+                         <RadioMenuItem mnemonicParsing="false" onAction="#onModeJeu" text="Smileys" toggleGroup="$modeTrace1" />
+                     </items>
+                  </Menu>
+                  <Menu mnemonicParsing="false" text="Nombre de Joueurs">
+                     <items>
+                        <RadioMenuItem mnemonicParsing="false" onAction="#onPlayerCount" text="1 joueur">
+                           <toggleGroup>
+                              <ToggleGroup fx:id="playerCount" />
+                           </toggleGroup>
+                        </RadioMenuItem>
+                        <RadioMenuItem mnemonicParsing="false" onAction="#onPlayerCount" text="2 joueurs" toggleGroup="$playerCount" />
+                     </items>
+                  </Menu>
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <RadioMenuItem mnemonicParsing="false" onAction="#onTricheActive" text="Mode triche" />
                   <Menu mnemonicParsing="false" text="Mode de tracé">
                      <items>
                         <RadioMenuItem mnemonicParsing="false" onAction="#onModeTrace" selected="true" text="Horizontal">
@@ -39,29 +64,17 @@
                         <RadioMenuItem mnemonicParsing="false" onAction="#onModeTrace" text="Spirale" toggleGroup="$modeTrace" />
                      </items>
                   </Menu>
-                  <Menu mnemonicParsing="false" text="Type cartes">
-                     <items>
-                        <RadioMenuItem mnemonicParsing="false" onAction="#onModeJeu" selected="true" text="Chiffres">
-                           <toggleGroup>
-                              <ToggleGroup fx:id="modeTrace1" />
-                           </toggleGroup>
-                        </RadioMenuItem>
-                        <RadioMenuItem mnemonicParsing="false" onAction="#onModeJeu" text="Lettres" toggleGroup="$modeTrace1" />
-                        <RadioMenuItem mnemonicParsing="false" onAction="#onModeJeu" text="Minecraft" toggleGroup="$modeTrace1" />
-                     </items>
-                  </Menu>
-                  <SeparatorMenuItem mnemonicParsing="false" />
-                  <RadioMenuItem mnemonicParsing="false" onAction="#onTricheActive" text="Mode triche" />
                   <SeparatorMenuItem mnemonicParsing="false" />
                   <MenuItem mnemonicParsing="false" onAction="#onQuitter" text="Quitter" />
                </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Aide">
             <items>
-              <MenuItem mnemonicParsing="false" text="À propos" />
+              <MenuItem mnemonicParsing="false" onAction="#onAbout" text="À propos" />
             </items>
           </Menu>
             <Menu fx:id="score" mnemonicParsing="false" text="Score" />
+            <Menu fx:id="Tour" mnemonicParsing="false" text="A qui le tour" />
         </menus>
       </MenuBar>
    </top>

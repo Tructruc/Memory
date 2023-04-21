@@ -3,5 +3,6 @@ package memory;
 public enum ModeJeu {
     CHIFFRES,
     LETTRES,
-    MINECRAFT
+    MINECRAFT,
+    SMILEYS
 }

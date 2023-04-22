@@ -44,7 +44,7 @@
                   </Menu>
                   <Menu mnemonicParsing="false" text="Nombre de Joueurs">
                      <items>
-                        <RadioMenuItem mnemonicParsing="false" onAction="#onPlayerCount" text="1 joueur">
+                        <RadioMenuItem mnemonicParsing="false" onAction="#onPlayerCount" selected="true" text="1 joueur">
                            <toggleGroup>
                               <ToggleGroup fx:id="playerCount" />
                            </toggleGroup>
@@ -73,8 +73,8 @@
               <MenuItem mnemonicParsing="false" onAction="#onAbout" text="À propos" />
             </items>
           </Menu>
-            <Menu fx:id="score" mnemonicParsing="false" text="Score" />
-            <Menu fx:id="Tour" mnemonicParsing="false" text="A qui le tour" />
+            <Menu fx:id="score" mnemonicParsing="false"/>
+            <Menu fx:id="Tour" mnemonicParsing="false"/>
         </menus>
       </MenuBar>
    </top>

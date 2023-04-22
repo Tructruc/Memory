@@ -25,7 +25,7 @@ import java.net.URL;
 import java.util.*;
 
 public class gameController implements Initializable {
-
+    // Elements FXML
     @FXML
     public GridPane gameGrid;
     @FXML
@@ -35,8 +35,10 @@ public class gameController implements Initializable {
     @FXML
     public MenuItem Tour;
 
-    private Player suivant = Player.J1;
+//----------------------------------------------------------------------------------------------------------------------
 
+    // Variables locales
+    private Player suivant = Player.J1;
     private final int windowSize = 800;
     private boolean triche = false;
     private int gridSize =4;
@@ -49,11 +51,14 @@ public class gameController implements Initializable {
     private PlayerCount nbJoueurs = PlayerCount.ONE;
     private final StringProperty nbCoupsJ2 = new SimpleStringProperty("0");
 
-    private void disableLabel(Label label) {
-        label.setDisable(true);
-        label.setStyle("-fx-background-color: #555555; -fx-text-fill: #ffffff;");
-    }
+    //----------------------------------------------------------------------------------------------------------------------
 
+    // Méthodes FXML
+
+    /**
+     * Methode de selection de la taille de la grille
+     * @param event
+     */
     @FXML
     public void onSize(Event event){
         String name = ((MenuItem)event.getSource()).getText();
@@ -73,6 +78,10 @@ public class gameController implements Initializable {
         onRestart();
     }
 
+    /**
+     * Methode de Selection du mode de jeu / type de cases
+     * @param event
+     */
     @FXML
     public void onModeJeu(Event event){
         String name = ((MenuItem)event.getSource()).getText();
@@ -86,17 +95,30 @@ public class gameController implements Initializable {
         onRestart();
     }
 
+    /**
+     * Methode de Selection du nombre de joueurs
+     * @param event
+     */
     @FXML
     public void onPlayerCount(Event event){
         String name = ((MenuItem)event.getSource()).getText();
 
         switch (name) {
-            case "1 joueur" -> nbJoueurs = PlayerCount.ONE;
-            case "2 joueurs" -> nbJoueurs = PlayerCount.TWO;
+            case "1 joueur" -> {
+                nbJoueurs = PlayerCount.ONE;
+                Tour.setVisible(false);
+            }
+            case "2 joueurs" -> {
+                nbJoueurs = PlayerCount.TWO;
+                Tour.setVisible(true);
+            }
         }
         onRestart();
     }
 
+    /**
+     * Methode appelée pour redémarrer une nouvelle partie
+     */
     @FXML
     public void onRestart(){
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -110,6 +132,9 @@ public class gameController implements Initializable {
         }
     }
 
+    /**
+     * Methode pour activer le mode triche
+     */
     @FXML
     public void onTricheActive(){
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -126,6 +151,10 @@ public class gameController implements Initializable {
         }
     }
 
+    /**
+     * Methode pour changer le sens du tracé du mode triche
+     * @param event
+     */
     @FXML
     public void onModeTrace(Event event){
         String name = ((RadioMenuItem)event.getSource()).getText();
@@ -142,6 +171,48 @@ public class gameController implements Initializable {
         onRestart();
     }
 
+
+    /**
+     * Methode pour afficher la popUp à propos
+     */
+    @FXML
+    public void onAbout(){
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("À propos");
+        alert.setHeaderText("À propos");
+        alert.setContentText("Ce jeu à été réalisé par Émilien FIEU lors de la semaine IHM de l’IUT de Blagnac du 17 au 23 avril. Ce jeu est basé sur un code réalisé par Fabrice PELLAU. \nVous pouvez me contacter  sur discord Tructruc#9808");
+        alert.showAndWait();
+    }
+
+    /**
+     *
+     * @param event
+     */
+    @FXML
+    public void onQuitter(Event event){
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+
+        alert.setTitle("Quitter");
+        alert.setHeaderText("Voulez-vous vraiment quitter ?");
+        alert.setContentText("Si vous quittez, vous perdrez votre partie en cours.");
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == ButtonType.OK){
+            System.exit(0);
+        } else {
+            alert.close();
+            event.consume();
+        }
+    }
+
+//----------------------------------------------------------------------------------------------------------------------
+
+    //Méthodes locales
+
+    private void disableLabel(Label label) {
+        label.setDisable(true);
+        label.setStyle("-fx-background-color: #555555; -fx-text-fill: #ffffff;");
+    }
     private void initLabel(MouseEvent mouseEvent, Jeu jeu){
         Label label = (Label) mouseEvent.getSource();
         Reponse reponse = jeu.jouer(Integer.parseInt(label.getId()));
@@ -271,7 +342,7 @@ public class gameController implements Initializable {
         }
     }
 
-    public static int getValueInSpiral(int x, int y, int size) {
+    private static int getValueInSpiral(int x, int y, int size) {
         int[][] matrix = new int[size][size];
         int left = 0, right = size-1, top = 0, bottom = size-1;
         int num = 1;
@@ -357,15 +428,6 @@ public class gameController implements Initializable {
         }else {
             Tour.setText("Tour : Joueur 2");
         }
-    }
-
-    @FXML
-    public void onAbout(){
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("À propos");
-        alert.setHeaderText("À propos");
-        alert.setContentText("Ce jeu à été réalisé par Émilien FIEU lors de la semaine IHM de l’IUT de Blagnac du 17 au 23 avril. Ce jeu est basé sur un code réalisé par Fabrice PELLAU. \nVous pouvez me contacter  sur discord Tructruc#9808");
-        alert.showAndWait();
     }
 
     public void onStartGame() {
@@ -464,22 +526,5 @@ public class gameController implements Initializable {
         menuPane.setMaxSize(windowSize,windowSize);
 
         gamePane.setCenter(menuPane);
-    }
-
-    @FXML
-    public void onQuitter(Event event){
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-
-        alert.setTitle("Quitter");
-        alert.setHeaderText("Voulez-vous vraiment quitter ?");
-        alert.setContentText("Si vous quittez, vous perdrez votre partie en cours.");
-
-        Optional<ButtonType> result = alert.showAndWait();
-        if (result.get() == ButtonType.OK){
-            System.exit(0);
-        } else {
-            alert.close();
-            event.consume();
-        }
     }
 }

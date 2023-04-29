@@ -512,7 +512,8 @@ public class gameController implements Initializable {
         startBtn.setOnAction(e->onStartGame());
         startBtn.setStyle("-fx-font-size: 30px");
 
-        Label titleLabel = new Label("Memory the Game");
+        Label titleLabel = new Label("emory the Game");
+        titleLabel.setGraphic(new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/icon.png")), 100, 100, true, true)));
         titleLabel.setStyle("-fx-font-size: 50px; -fx-font-weight: bold;");
 
 

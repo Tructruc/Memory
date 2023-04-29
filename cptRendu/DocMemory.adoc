@@ -1,7 +1,6 @@
 = Document de synthèse Projet Memory
 :toc-title: Table des matières
 :toc:
-:toclevels:5
 :title-page:
 :sectnums:
 :title-logo-image: image:/Logo_IUT_Blagnac.png[]

@@ -3,6 +3,7 @@ package memory;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import memory.view.gameController;
@@ -27,6 +28,7 @@ public class MemoryApp extends Application {
 			primaryStage.setScene(scene);
 			primaryStage.setResizable(false);
 			primaryStage.setOnCloseRequest(ctrl::onQuitter);
+			primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("view/images/icon.png")));
 
 			primaryStage.show();
 		} catch(IOException e){
